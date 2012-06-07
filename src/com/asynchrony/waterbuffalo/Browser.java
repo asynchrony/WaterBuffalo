@@ -8,23 +8,28 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 
 @SuppressWarnings("unused")
-class Browser {
+public class Browser {
 
 	private final WebDriver driver;		// The Selenium WebDriver that we're using.
 	private final JavascriptExecutor js;	// Handle we can use to run JavaScript.
-	private final Actions actions;		// Handle we can use to run low-level Selenium (keyboard and mouse) interactions. See http://selenium.googlecode.com/svn/trunk/docs/api/java/org/openqa/selenium/interactions/Actions.html
+//	private final Actions actions;		// Handle we can use to run low-level Selenium (keyboard and mouse) interactions. See http://selenium.googlecode.com/svn/trunk/docs/api/java/org/openqa/selenium/interactions/Actions.html
 	private final boolean isRemote;
 	private final String serverIP;		// IP of the system that the web server is running on.
 	private final String clientIP;		// IP of the system that the web browser is running on.
+
+    public Browser() {
+		this("Firefox", "localhost", "localhost");    	
+    }
 
 	Browser(WebDriver driver) {
 		this.driver = driver;
 		this.isRemote = (driver instanceof RemoteWebDriver);
 		this.js = (JavascriptExecutor) driver;
-		this.actions = (Actions) driver;
+//		this.actions = (Actions) driver;
 		this.clientIP = ""; // TODO: FIXME!
 		this.serverIP = ""; // TODO: FIXME!
 	}
+
 	Browser(String browserType) {
 		this(browserType, "localhost", "localhost");
 	}
@@ -53,11 +58,12 @@ class Browser {
 	public void quit() {
 		driver.close();
 	}
+	
 	public void sendKeys(String text) {
-		actions.sendKeys(text);
+//		actions.sendKeys(text);
 	}
 	public void sendKeys(Keys keys) {
-		actions.sendKeys(keys);
+//		actions.sendKeys(keys);
 	}
 
 	// General Info
