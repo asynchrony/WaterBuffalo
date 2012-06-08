@@ -1,6 +1,12 @@
 package com.asynchrony.waterbuffalo;
 
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.*;
 import org.openqa.selenium.firefox.*;
 import org.openqa.selenium.ie.*;
 import org.openqa.selenium.interactions.*;
@@ -16,6 +22,8 @@ public class Browser {
 	private final boolean isRemote;
 	private final String serverIP;		// IP of the system that the web server is running on.
 	private final String clientIP;		// IP of the system that the web browser is running on.
+
+	private String currentURL = "http://localhost:8560/prodo/"; // TODO: Make the constructor and theBrowser() pass this in.
 
     public Browser() {
 		this("Firefox", "localhost", "localhost");    	
@@ -49,9 +57,29 @@ public class Browser {
 	}
 
 	// Actions
-	public void visit(String URL) {
-		driver.get(URL);
+
+	/**
+	 * Commands the browser go to the specified URL.
+	 *
+	 * @param url  fully specified URL, or a relative URL (relative to the current URL)
+	 */
+	public void visit(String url) {
+		currentURL = fullySpecifiedURL(url);
+		driver.get(currentURL);
 	}
+
+	private String fullySpecifiedURL(String url) {
+		URI baseUrl;
+		URI absoluteUrl;
+		try {
+			baseUrl = new URI(currentURL);
+			absoluteUrl = baseUrl.resolve(url);
+			return absoluteUrl.toString();
+		} catch (URISyntaxException e) {
+			return currentURL;
+		}
+	}
+
 	public void close() {
 		driver.close();
 	}
