@@ -8,6 +8,8 @@ repositories {
 
 dependencies {
 	compile 'org.seleniumhq.selenium:selenium-server:2.+'
-	testCompile 'junit:junit-dep:4.10'
+	testCompile 'junit:junit-dep:4.10', 'org.hamcrest:hamcrest-all:1.+', 'org.mockito:mockito-all:1.+' , 'org.powermock:powermock-api-mockito:1.4.+'
+         
+            
             
 }

@@ -2,33 +2,21 @@ package old.asynchrony.waterbuffalo;
 
 import static old.asynchrony.waterbuffalo.Filter.containingText;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.HasCapabilities;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 
 public class Browser {
 
@@ -36,18 +24,8 @@ public class Browser {
 
 	private static Browser theBrowser;
 
-	private final WebDriver driver; // The Selenium WebDriver that we're using.
-	private final JavascriptExecutor js; // Handle we can use to run JavaScript.
-	private final Actions actions; // Handle we can use to run low-level
-									// Selenium (keyboard and mouse)
-									// interactions. See
-									// http://selenium.googlecode.com/svn/trunk/docs/api/java/org/openqa/selenium/interactions/Actions.html
-	private final WebDriverWait wait; // Use wait.until() to do explicit
-										// waiting/timeouts.
-
-	private final boolean isRemote;
-	private final String type; // "Firefox", "Chrome", or "Internet Explorer"
-	private final String platform; // "Windows" or "Mac OS X"
+	private WebDriver driver; // The Selenium WebDriver that we're using.
+	private JavascriptExecutor js; // Handle we can use to run JavaScript.
 
 	private String currentURL = "http://localhost:8560/prodo/"; // TODO: Make
 																// the
@@ -73,136 +51,40 @@ public class Browser {
 		return theBrowser;
 	}
 
-	Browser(WebDriver driver) {
-		this.driver = driver;
-		this.isRemote = (driver instanceof RemoteWebDriver);
-		this.js = (JavascriptExecutor) driver;
-		this.actions = (Actions) driver;
-		this.type = "Chrome"; // TODO: FIXME!
-		this.platform = "Windows"; // TODO: FIXME!
-		this.wait = new WebDriverWait(driver, TIMEOUT_IN_SECONDS);
-	}
+	
+
 
 	Browser() {
-		// TODO: Use System.getProperty() to set these defaults.
-		this("Internet Explorer", "127.0.0.1", "127.0.0.1");
-	}
+		RemoteDriverBuilder builder = new RemoteDriverBuilder();
+		driver = builder.build();
 
-	Browser(String browserType, String serverIP, String browserIP) {
-		this.isRemote = false; // FIXME: determine whether browserIP is my own
-								// IP or localhost.
-
-		Properties environmentProperties = new Properties();
-		InputStream environmentPropertiesFile = this.getClass()
-				.getResourceAsStream(
-						"/com/asynchrony/waterbuffalo/environment.properties");
-		try {
-			environmentProperties.load(environmentPropertiesFile);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-
-		this.type = environmentProperties.getProperty("browser");
-		// this.type = browserType;
-		DesiredCapabilities capabilities;
-		// CommandExecutor executor;
-		// Selenium selenium;
-
-		if (isRemote) {
-			String remoteSeleniumDriverURL = "http://" + browserIP
-					+ ":4444/wd/hub";
-
-			if (type.equals("Firefox")) {
-				capabilities = DesiredCapabilities.firefox();
-			} else if (type.equals("Chrome")) {
-				// FIXME: The following line assumes the remote system is
-				// running Mac OS X.
-				System.setProperty("webdriver.chrome.driver",
-						"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome");
-				capabilities = DesiredCapabilities.chrome();
-				// } else if ( browserType == "Safari" ) {
-				// // WebDriver does not yet support Safari, so this does not
-				// really work for us.
-				// // Per
-				// http://groups.google.com/group/webdriver/msg/68d385ecc940a03f?dmode=source
-				// capabilities = new DesiredCapabilities();
-				// selenium = new DefaultSelenium(remoteIP, 4444, "*safari",
-				// baseURL);
-				// executor = new SeleneseCommandExecutor(selenium);
-				// driver = new RemoteWebDriver(executor, capabilities);
-			} else {
-				throw new UnsupportedOperationException(
-						"Please set browserType.");
-			}
-
-			try {
-				driver = new RemoteWebDriver(new URL(remoteSeleniumDriverURL),
-						capabilities);
-			} catch (MalformedURLException e) {
-				throw new RuntimeException(
-						"Could not open link to remote Selenium driver at "
-								+ browserIP);
-			}
-		} else {
-			if (type.equals("Firefox")) {
-				driver = new FirefoxDriver();
-			} else if (type.equals("Internet Explorer")) {
-				capabilities = DesiredCapabilities.internetExplorer();
-				capabilities
-						.setCapability(
-								InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,
-								true);
-				driver = new InternetExplorerDriver(capabilities);
-			} else if (type.equals("Chrome")) {
-				System.setProperty("webdriver.chrome.driver",
-						environmentProperties
-								.getProperty("webdriver.chrome.driver"));
-				driver = new ChromeDriver();
-				// } else if ( browserType == "Safari" ) {
-				// // WebDriver does not yet support Safari, so this does not
-				// really work for us.
-				// selenium = new DefaultSelenium("localhost", 4444,
-				// "*safariproxy", baseUrl);
-				// executor = new SeleneseCommandExecutor(selenium);
-				// driver = new RemoteWebDriver(executor, capabilities);
-			} else {
-				throw new UnsupportedOperationException(
-						"Please set valid browserType. Browser =" + type);
-			}
-		}
-
-		// Always wait for 5 seconds before failing due to not finding an
-		// element on the page, or running a script.
-		driver.manage().timeouts()
-				.implicitlyWait(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS);
-		driver.manage().timeouts()
-				.setScriptTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS);
+		driver.manage().timeouts().setScriptTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS);
 
 		this.js = (JavascriptExecutor) driver;
-		// FIXME: Following line throws java.lang.ClassCastException:
-		// org.openqa.selenium.firefox.FirefoxDriver cannot be cast to
-		// org.openqa.selenium.interactions.Actions
-		this.actions = null; // (Actions) driver;
-
-		// TODO: Can't figure out why this first line of JS runs, but the second
-		// throws an exception.
-		// Long two = (Long)js.executeScript("return 1 + 1;");
-		// assertEquals((long)2, two.longValue());
-
-		String platform = ((HasCapabilities) driver).getCapabilities()
-				.getPlatform().name();
-		this.platform = platform.equalsIgnoreCase("MAC") ? "Mac OS X"
-				: "Windows";
-		this.wait = new WebDriverWait(driver, TIMEOUT_IN_SECONDS);
 	}
 
-	Browser(String browserType) {
-		throw new RuntimeException("Not Yet Implemented");
+
+
+
+
+
+	public Capabilities getDriverCapabilities() {
+		return ((HasCapabilities) driver).getCapabilities();
 	}
 
-	Browser(String browserType, String serverIP) {
-		this(browserType, serverIP, "localhost");
+	public static boolean isWindows() {
+		return isOperatingSystem("win");
 	}
+	public static boolean isMac() {
+		return isOperatingSystem("mac");
+
+	}
+
+	private static boolean isOperatingSystem(String osName) {
+		return System.getProperty("os.name").toLowerCase().indexOf(osName) >= 0;
+	}
+
 
 	// Finders
 	public Element find(String selector, Filter... filters) {
@@ -218,10 +100,9 @@ public class Browser {
 				return new Element(this, potentialMatch);
 			}
 		}
-		throw new NoSuchElementException("Could not find " + by.toString()
-				+ " " + filters[0].description());
+		throw new NoSuchElementException("Could not find " + by.toString() + " " + filters[0].description());
 	}
-	
+
 	public boolean has(By locator) {
 		return findAll(locator).size() != 0;
 	}
@@ -257,12 +138,8 @@ public class Browser {
 		} catch (NoSuchElementException e1) {
 			// Not an error. Keep searching
 		}
-		
-		By[] byList = { 
-				By.id(fieldSelector), 
-				By.name(fieldSelector),
-				By.cssSelector(fieldSelector) 
-				};
+
+		By[] byList = { By.id(fieldSelector), By.name(fieldSelector), By.cssSelector(fieldSelector) };
 
 		for (int i = 0; i < byList.length - 1; i++) {
 			try {
@@ -288,8 +165,7 @@ public class Browser {
 				return new Element(this, labelWebElement);
 			}
 		}
-		throw new NoSuchElementException("Could not find label with text "
-				+ labelText);
+		throw new NoSuchElementException("Could not find label with text " + labelText);
 	}
 
 	// WARNING: Labels must have a FOR attribute. Does not yet support fields
@@ -298,9 +174,7 @@ public class Browser {
 		String forText = label.getAttribute("for");
 
 		if (forText == null || forText.equals("")) {
-			throw new NoSuchElementException(
-					"Could not find field associated with label "
-							+ label.getText());
+			throw new NoSuchElementException("Could not find field associated with label " + label.getText());
 		}
 
 		return new Element(this, driver.findElement(By.id(forText)));
@@ -402,20 +276,11 @@ public class Browser {
 
 	// General Info
 	public String type() {
-		return type;
+		return getDriverCapabilities().getBrowserName();
 	}
 
 	public String getPlatform() {
-		return platform;
-	}
-
-	public boolean isRemote() { // TRUE if we're hitting Selenium RC.
-		return isRemote;
-	}
-
-	public boolean isLocal() { // TRUE if we're hitting a local browser via
-								// WebDriver.
-		return !isRemote;
+		return getDriverCapabilities().getPlatform().name().equalsIgnoreCase("MAC") ? "Mac OS X" : "Windows";
 	}
 
 	// Page Info / Output / Details / Getters
@@ -493,6 +358,7 @@ public class Browser {
 	public void clickOnOptionInSelect(Element element, String selectedElement) {
 		findOptionInSelect(element, selectedElement).click();
 	}
+
 	public void clickOnOptionInSelect(Element element, int index) {
 		findOptionInSelect(element, index).click();
 	}
@@ -500,6 +366,7 @@ public class Browser {
 	public Element findOptionInSelect(Element element, String selectedElement) {
 		return element.find("option", containingText(selectedElement));
 	}
+
 	public Element findOptionInSelect(Element element, int index) {
 		return element.all("option")[index];
 	}
