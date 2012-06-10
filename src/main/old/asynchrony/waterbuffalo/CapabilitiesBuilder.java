@@ -23,12 +23,15 @@ public class CapabilitiesBuilder {
 			capabilities = DesiredCapabilities.firefox();
 		} else if (type.equals("Chrome")) {
 			capabilities = DesiredCapabilities.chrome();
+		} else if (type.equals("Safari")) {
+			capabilities = DesiredCapabilities.safari();
 		} else if (type.equals("Internet Explorer")) {
 			capabilities = DesiredCapabilities.internetExplorer();
 			capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
 		} else {
 			throw new UnsupportedOperationException("Please set browserType.");
 		}
+		capabilities.setCapability("isRemote", loader.isRemote());
 		return capabilities;
 	}
 

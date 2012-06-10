@@ -24,6 +24,10 @@ public class PropertiesLoader {
 		}
 	}
 	
+	public boolean isRemote() {
+		return environmentProperties.getProperty("webdriver.remote.server") != null;
+	}
+	
 	public String getBrowserType() {
 		loadProperties();
 		setChromePath();
