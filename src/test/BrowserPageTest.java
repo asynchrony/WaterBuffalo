@@ -11,7 +11,7 @@ public class BrowserPageTest {
 
 	private static final Browser browser = new Browser();
 	private static final String __PATH__ = (new File(ClassLoader.getSystemClassLoader().getResource(".").getPath())).getParent();
-	private static final String FIXTURE_PATH = __PATH__ + "/test/fixtures";
+	private static final String FIXTURE_PATH = __PATH__ + "/src/test/fixtures";
 
 	@Before
 	public void setUp() {
