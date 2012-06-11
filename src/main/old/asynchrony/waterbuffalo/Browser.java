@@ -18,6 +18,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.asynchrony.waterbuffalo.RemoteDriverBuilder;
+
 public class Browser {
 
 	private static final int TIMEOUT_IN_SECONDS = 5;
@@ -73,17 +75,6 @@ public class Browser {
 		return ((HasCapabilities) driver).getCapabilities();
 	}
 
-	public static boolean isWindows() {
-		return isOperatingSystem("win");
-	}
-	public static boolean isMac() {
-		return isOperatingSystem("mac");
-
-	}
-
-	private static boolean isOperatingSystem(String osName) {
-		return System.getProperty("os.name").toLowerCase().indexOf(osName) >= 0;
-	}
 
 
 	// Finders

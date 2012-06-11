@@ -1,4 +1,5 @@
-package old.asynchrony.waterbuffalo;
+package com.asynchrony.waterbuffalo;
+
 
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -20,6 +21,9 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import com.asynchrony.waterbuffalo.CapabilitiesBuilder;
+import com.asynchrony.waterbuffalo.RemoteDriverBuilder;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { RemoteDriverBuilder.class, RemoteWebDriver.class })

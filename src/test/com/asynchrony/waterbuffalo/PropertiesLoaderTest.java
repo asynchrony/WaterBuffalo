@@ -1,11 +1,12 @@
-package old.asynchrony.waterbuffalo;
+package com.asynchrony.waterbuffalo;
 
-import static old.asynchrony.waterbuffalo.PropertiesLoader.APPSERVER_PATH;
-import static old.asynchrony.waterbuffalo.PropertiesLoader.BROWSER;
-import static old.asynchrony.waterbuffalo.PropertiesLoader.DEFAULT_CHROME_MAC_PATH;
-import static old.asynchrony.waterbuffalo.PropertiesLoader.DEFAULT_CHROME_WINDOWS_PATH;
-import static old.asynchrony.waterbuffalo.PropertiesLoader.WEBDRIVER_CHROME_DRIVER;
-import static old.asynchrony.waterbuffalo.PropertiesLoader.WEBDRIVER_REMOTE_SERVER;
+
+import static com.asynchrony.waterbuffalo.PropertiesLoader.APPSERVER_PATH;
+import static com.asynchrony.waterbuffalo.PropertiesLoader.BROWSER;
+import static com.asynchrony.waterbuffalo.PropertiesLoader.DEFAULT_CHROME_MAC_PATH;
+import static com.asynchrony.waterbuffalo.PropertiesLoader.DEFAULT_CHROME_WINDOWS_PATH;
+import static com.asynchrony.waterbuffalo.PropertiesLoader.WEBDRIVER_CHROME_DRIVER;
+import static com.asynchrony.waterbuffalo.PropertiesLoader.WEBDRIVER_REMOTE_SERVER;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -19,12 +20,15 @@ import static org.mockito.Mockito.when;
 
 import java.util.Properties;
 
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import com.asynchrony.waterbuffalo.PropertiesLoader;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { Browser.class})

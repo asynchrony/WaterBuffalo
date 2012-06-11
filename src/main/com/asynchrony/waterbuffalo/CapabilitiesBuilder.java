@@ -1,4 +1,5 @@
-package old.asynchrony.waterbuffalo;
+package com.asynchrony.waterbuffalo;
+
 
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -20,11 +21,11 @@ public class CapabilitiesBuilder {
 		DesiredCapabilities capabilities = null;
 		loader.loadProperties();
 		String type = loader.getBrowserType();
-		if (type.equals("Chrome")) {
+		if ("Chrome".equals(type)) {
 			capabilities = DesiredCapabilities.chrome();
-		} else if (type.equals("Safari")) {
+		} else if ("Safari".equals(type)) {
 			capabilities = DesiredCapabilities.safari();
-		} else if (type.equals("Internet Explorer")) {
+		} else if ("Internet Explorer".equals(type)) {
 			capabilities = DesiredCapabilities.internetExplorer();
 			capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
 		} else {

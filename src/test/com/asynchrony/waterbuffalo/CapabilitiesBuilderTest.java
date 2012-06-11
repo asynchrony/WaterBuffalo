@@ -1,4 +1,4 @@
-package old.asynchrony.waterbuffalo;
+package com.asynchrony.waterbuffalo;
 
 import static org.junit.Assert.*;
 
@@ -7,6 +7,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
+
+import com.asynchrony.waterbuffalo.CapabilitiesBuilder;
+import com.asynchrony.waterbuffalo.PropertiesLoader;
 
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.*;

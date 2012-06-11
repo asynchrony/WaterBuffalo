@@ -21,11 +21,13 @@ public class BrowserPageTest {
 				browser.quit();
 			}
 		});
-		browser.visit("file://" + FIXTURE_PATH + "/page1.html"); // FIXME: Probably won't work in Windows.
+		String appPath = "file://" + (System.getProperty("user.dir") + "/src/test/fixtures") + "/";
+		browser.visit(appPath);
 	}
 
 	@Test
 	public void canGetPageTitle() {
+		browser.visit("page1.html");
 		assertThat(browser.getTitle(), is("Page 1 Title"));
 	}
 

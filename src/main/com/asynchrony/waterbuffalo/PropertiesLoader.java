@@ -1,4 +1,4 @@
-package old.asynchrony.waterbuffalo;
+package com.asynchrony.waterbuffalo;
 
 import java.io.IOException;
 import java.io.InputStream;
