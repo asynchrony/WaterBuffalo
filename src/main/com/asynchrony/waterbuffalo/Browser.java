@@ -26,8 +26,10 @@ public class Browser {
 //	private final String serverIP;		// IP of the system that the web server is running on.
 //	private final String clientIP;		// IP of the system that the web browser is running on.
 
-	private String currentURL = ""; // TODO: Make the constructor and theBrowser() pass this in.
+//	private String currentURL = ""; // TODO: Make the constructor and theBrowser() pass this in.
 
+	private FullySpecifiedURLResolver resolver = new FullySpecifiedURLResolver();
+	
 	public Browser() {
 		RemoteDriverBuilder builder = new RemoteDriverBuilder();
 		driver = builder.build();
@@ -65,23 +67,11 @@ public class Browser {
 	 * @param url  fully specified URL, or a relative URL (relative to the current URL)
 	 */
 	public void visit(String url) {
-		currentURL = fullySpecifiedURL(url);
-		driver.get(currentURL);
+		
+		driver.get(resolver.resolve(url));
 	}
 
-	private String fullySpecifiedURL(String url) {
-		URI baseUrl;
-		URI absoluteUrl;
-		try {
-			baseUrl = new URI(currentURL);
-			absoluteUrl = baseUrl.resolve(url);
-			return absoluteUrl.toString();
-		} catch (URISyntaxException e) {
-			return currentURL;
-		}
-	}
-
-//	public void close() {
+	//	public void close() {
 //		driver.close();
 //	}
 	public void quit() {
